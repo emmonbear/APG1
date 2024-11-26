@@ -44,11 +44,11 @@ func validateInput(input string) (int, error) {
 	num, err := strconv.Atoi(input)
 
 	if err != nil {
-		return 0, fmt.Errorf("Error: incorrect entry %s. An integer is expected.", input)
+		return 0, fmt.Errorf("incorrect entry %s. An integer is expected", input)
 	}
 
 	if num < minValue || num > maxValue {
-		return 0, fmt.Errorf("Error: number %d is out of valid range.", num)
+		return 0, fmt.Errorf("number %d is out of valid range", num)
 	}
 
 	return num, err
