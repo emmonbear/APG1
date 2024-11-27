@@ -3,7 +3,9 @@ package dbreader
 import (
 	"encoding/json"
 	"encoding/xml"
+	"log"
 	"os"
+	"path/filepath"
 )
 
 type Ingredients struct {
@@ -62,4 +64,17 @@ func (r *JSONReader) Read(filename string) (Recipes, error) {
 	}
 
 	return recipes, nil
+}
+
+func GetDBReader(filename string) DBreader {
+	ext := filepath.Ext(filename)
+	switch ext {
+	case ".xml":
+		return &XMLReader{}
+	case ".json":
+		return &JSONReader{}
+	default:
+		log.Fatalf("Unsupported file extension: %s", ext)
+		return nil
+	}
 }

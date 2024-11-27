@@ -5,6 +5,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"log"
+	"path/filepath"
 )
 
 type DBPrinter interface {
@@ -31,4 +33,17 @@ func (p *JSONPrinter) Print(w io.Writer, data interface{}) error {
 	}
 	fmt.Fprintln(w, string(output))
 	return nil
+}
+
+func GetDBPrinter(filename string) DBPrinter {
+	ext := filepath.Ext(filename)
+	switch ext {
+	case ".xml":
+		return &XMLPrinter{}
+	case ".json":
+		return &JSONPrinter{}
+	default:
+		log.Fatalf("Unsupported file extension: %s", ext)
+		return nil
+	}
 }
