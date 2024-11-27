@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/emmonbear/APG1/Day01.git/pkg/dbcompare"
+	"github.com/emmonbear/APG1/Day01.git/pkg/dbreader"
 )
 
 type DBFiles struct {
@@ -12,8 +15,22 @@ type DBFiles struct {
 
 func main() {
 	files := parseFlags()
-	fmt.Printf("Old file: %s\n", files.oldFile)
-	fmt.Printf("New file: %s\n", files.newFile)
+	oldReader := dbreader.GetDBReader(files.oldFile)
+	newReader := dbreader.GetDBReader(files.newFile)
+	oldRecipes, err := oldReader.Read(files.oldFile)
+	if err != nil {
+		fmt.Printf("Failed to read old file: %v\n", err)
+		return
+	}
+	newRecipes, err := newReader.Read(files.newFile)
+	if err != nil {
+		fmt.Printf("Failed to read new file: %v\n", err)
+		return
+	}
+
+	comparer := dbcompare.NewComparer()
+	comparer.CompareRecipes(oldRecipes, newRecipes)
+
 }
 
 func parseFlags() DBFiles {
