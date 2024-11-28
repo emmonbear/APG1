@@ -9,7 +9,14 @@ build:
 fmt:
 	$(GO) fmt ./...
 
+test:
+	go test ./... -coverprofile=c.out
+
+gcov: test
+	go tool cover -html=c.out -o coverage.html
+	xdg-open coverage.html
+
 clean:
-	rm -f readDB compareDB compareFS
+	rm -f readDB compareDB compareFS c.out coverage.html
 
 .PHONY: build fmt clean
