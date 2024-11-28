@@ -24,7 +24,7 @@ type Recipes struct {
 	Cakes []Cake `xml:"cake" json:"cake"`
 }
 
-type DBreader interface {
+type DBReader interface {
 	Read(filename string) (Recipes, error)
 }
 
@@ -66,7 +66,7 @@ func (r *JSONReader) Read(filename string) (Recipes, error) {
 	return recipes, nil
 }
 
-func GetDBReader(filename string) DBreader {
+func GetDBReader(filename string) DBReader {
 	ext := filepath.Ext(filename)
 	switch ext {
 	case ".xml":
@@ -74,7 +74,7 @@ func GetDBReader(filename string) DBreader {
 	case ".json":
 		return &JSONReader{}
 	default:
-		log.Fatalf("Unsupported file extension: %s", ext)
+		log.Printf("Unsupported file extension: %s", ext)
 		return nil
 	}
 }
