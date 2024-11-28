@@ -43,7 +43,7 @@ func GetDBPrinter(filename string) DBPrinter {
 	case ".json":
 		return &JSONPrinter{}
 	default:
-		log.Fatalf("Unsupported file extension: %s", ext)
+		log.Printf("Unsupported file extension: %s", ext)
 		return nil
 	}
 }
