@@ -52,7 +52,7 @@ func (c *Comparer) compareCakes(oldCakeMap, newCakeMap map[string]dbreader.Cake)
 
 func (c *Comparer) compareCake(oldCake, newCake dbreader.Cake) {
 	if oldCake.Time != newCake.Time {
-		fmt.Printf("CHANGED cooking time for cake \"%s\" - \"%s\"  instead of \"%s\"\n", oldCake.Name, oldCake.Time, newCake.Time)
+		fmt.Printf("CHANGED cooking time for cake \"%s\" - \"%s\" instead of \"%s\"\n", oldCake.Name, newCake.Time, oldCake.Time)
 	}
 
 	oldIngredientsMap := c.createIngredientsMap(oldCake.Ingredients)
@@ -93,15 +93,15 @@ func (c *Comparer) compareIngredients(oldIngredientsMap, newIngredientsMap map[s
 
 func (c *Comparer) compareIngredient(oldIngredient, newIngredient dbreader.Ingredients, cakeName string) {
 	if oldIngredient.Unit != newIngredient.Unit && newIngredient.Unit != "" {
-		fmt.Printf("CHANGED unit for ingredient \"%s\" for cake  \"%s\" - \"%s\" instead of \"%s\"\n", oldIngredient.Name, cakeName, newIngredient.Unit, oldIngredient.Unit)
+		fmt.Printf("CHANGED unit for ingredient \"%s\" for cake \"%s\" - \"%s\" instead of \"%s\"\n", oldIngredient.Name, cakeName, newIngredient.Unit, oldIngredient.Unit)
 	}
-
+	
 	if oldIngredient.Count != newIngredient.Count && oldIngredient.Unit == newIngredient.Unit {
-		fmt.Printf("CHANGED unit count for ingredient \"%s\" for cake  \"%s\" - \"%s\" instead of \"%s\"\n", oldIngredient.Name, cakeName, newIngredient.Count, oldIngredient.Count)
+		fmt.Printf("CHANGED unit count for ingredient \"%s\" for cake \"%s\" - \"%s\" instead of \"%s\"\n", oldIngredient.Name, cakeName, newIngredient.Count, oldIngredient.Count)
 	}
-
 	if oldIngredient.Unit != "" && newIngredient.Unit == "" {
 		fmt.Printf("REMOVED unit \"%s\" for ingredient \"%s\" for cake \"%s\"\n", oldIngredient.Unit, oldIngredient.Name, cakeName)
 	}
+
 
 }
