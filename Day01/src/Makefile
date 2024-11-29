@@ -16,6 +16,11 @@ gcov: test
 	go tool cover -html=c.out -o coverage.html
 	xdg-open coverage.html
 
+dvi:
+	godoc -http=:6060 &
+	@echo "Documentation server running at http://localhost:6060/pkg"
+	@echo "Press Ctrl+C to stop the server"
+
 clean:
 	rm -f readDB compareDB compareFS c.out coverage.html
 
