@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 
 	"github.com/emmonbear/APG1/Day01.git/pkg/fscompare"
 )
@@ -13,7 +14,10 @@ type DumpFiles struct {
 
 func main() {
 	files := parseFlags()
-	fscompare.NewFSComparer().CompareDumps(files.newFile, files.oldFile)
+	err := fscompare.NewFSComparer().CompareDumps(files.newFile, files.oldFile)
+	if err != nil {
+		log.Fatalf("failed to compare dumps: %v", err)
+	}
 
 }
 

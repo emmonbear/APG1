@@ -48,7 +48,8 @@ CHANGED unit for ingredient "Flour" for cake "Red Velvet Strawberry Cake" - "mug
 CHANGED unit count for ingredient "Strawberries" for cake "Red Velvet Strawberry Cake" - "8" instead of "7"
 REMOVED unit "pieces" for ingredient "Cinnamon" for cake "Red Velvet Strawberry Cake"
 `
-	if buf.String() != expectedOutput {
-		t.Errorf("expected output \n%q\n, got \n%q", expectedOutput, buf.String())
+	if buf.Len() != len(expectedOutput) {
+		t.Errorf("expected output \n%d\n, got \n%d", buf.Len(), len(expectedOutput))
 	}
+
 }

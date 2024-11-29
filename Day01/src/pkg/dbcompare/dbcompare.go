@@ -99,8 +99,8 @@ func (c *Comparer) compareIngredient(oldIngredient, newIngredient dbreader.Ingre
 	if oldIngredient.Count != newIngredient.Count && oldIngredient.Unit == newIngredient.Unit {
 		fmt.Printf("CHANGED unit count for ingredient \"%s\" for cake \"%s\" - \"%s\" instead of \"%s\"\n", oldIngredient.Name, cakeName, newIngredient.Count, oldIngredient.Count)
 	}
+
 	if oldIngredient.Unit != "" && newIngredient.Unit == "" {
 		fmt.Printf("REMOVED unit \"%s\" for ingredient \"%s\" for cake \"%s\"\n", oldIngredient.Unit, oldIngredient.Name, cakeName)
 	}
-
 }

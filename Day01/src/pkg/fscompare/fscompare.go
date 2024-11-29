@@ -13,15 +13,17 @@ func NewFSComparer() *FSComparer {
 	return &FSComparer{}
 }
 
-func (c *FSComparer) CompareDumps(oldFile, newFile string) {
+func (c *FSComparer) CompareDumps(oldFile, newFile string) error {
 	oldSet, err := c.readFile(oldFile)
 	if err != nil {
-		log.Fatalf("read file error: %v", err)
+		log.Printf("read file error: %v", err)
+		return err
 	}
 
 	newSet, err := c.readFile(newFile)
 	if err != nil {
-		log.Fatalf("read file error: %v", err)
+		log.Printf("read file error: %v", err)
+		return err
 	}
 
 	for path := range oldSet {
@@ -35,6 +37,7 @@ func (c *FSComparer) CompareDumps(oldFile, newFile string) {
 			fmt.Printf("REMOVED %s\n", path)
 		}
 	}
+	return nil
 }
 
 func (c *FSComparer) readFile(filename string) (map[string]struct{}, error) {
