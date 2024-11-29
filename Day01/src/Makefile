@@ -9,7 +9,7 @@ build:
 fmt:
 	$(GO) fmt ./...
 
-test:
+test: clean
 	go test ./... -coverprofile=c.out
 
 gcov: test
