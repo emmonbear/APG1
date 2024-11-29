@@ -1,3 +1,7 @@
+// Copyright 2024 Moskalev Ilya. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
+
 package dbcompare
 
 import (
@@ -6,12 +10,15 @@ import (
 	"github.com/emmonbear/APG1/Day01.git/pkg/dbreader"
 )
 
+// Comparer is a struct that provides methods to compare recipes.
 type Comparer struct{}
 
+// NewComparer creates a new instance of Comparer.
 func NewComparer() *Comparer {
 	return &Comparer{}
 }
 
+// CompareRecipes compares two sets of recipes and prints the differences.
 func (c *Comparer) CompareRecipes(oldDB, newDB dbreader.Recipes) {
 	oldCakeMap := c.createCakeMap(oldDB.Cakes)
 	newCakeMap := c.createCakeMap(newDB.Cakes)
@@ -19,6 +26,7 @@ func (c *Comparer) CompareRecipes(oldDB, newDB dbreader.Recipes) {
 	c.compareCakes(oldCakeMap, newCakeMap)
 }
 
+// CreateCakeMap creates a map of cakes from a slice of cakes.
 func (c *Comparer) createCakeMap(cakes []dbreader.Cake) map[string]dbreader.Cake {
 	cakeMap := make(map[string]dbreader.Cake, len(cakes))
 	for _, cake := range cakes {
@@ -29,6 +37,7 @@ func (c *Comparer) createCakeMap(cakes []dbreader.Cake) map[string]dbreader.Cake
 	return cakeMap
 }
 
+// CompareCakes compares two maps of cakes and prints the differences.
 func (c *Comparer) compareCakes(oldCakeMap, newCakeMap map[string]dbreader.Cake) {
 	for name := range newCakeMap {
 		if _, ok := oldCakeMap[name]; !ok {
@@ -50,6 +59,7 @@ func (c *Comparer) compareCakes(oldCakeMap, newCakeMap map[string]dbreader.Cake)
 
 }
 
+// CompareCake compares two cakes and prints the differences.
 func (c *Comparer) compareCake(oldCake, newCake dbreader.Cake) {
 	if oldCake.Time != newCake.Time {
 		fmt.Printf("CHANGED cooking time for cake \"%s\" - \"%s\" instead of \"%s\"\n", oldCake.Name, newCake.Time, oldCake.Time)
@@ -61,6 +71,7 @@ func (c *Comparer) compareCake(oldCake, newCake dbreader.Cake) {
 	c.compareIngredients(oldIngredientsMap, newIngredientsMap, oldCake.Name)
 }
 
+// CreateIngredientsMap creates a map of ingredients from a slice of ingredients.
 func (c *Comparer) createIngredientsMap(ingredients []dbreader.Ingredients) map[string]dbreader.Ingredients {
 	ingredientMap := make(map[string]dbreader.Ingredients, len(ingredients))
 	for _, ingredient := range ingredients {
@@ -70,6 +81,8 @@ func (c *Comparer) createIngredientsMap(ingredients []dbreader.Ingredients) map[
 	return ingredientMap
 }
 
+
+// CompareIngredients compares two maps of ingredients and prints the differences.
 func (c *Comparer) compareIngredients(oldIngredientsMap, newIngredientsMap map[string]dbreader.Ingredients, cakeName string) {
 	for name := range newIngredientsMap {
 		if _, ok := oldIngredientsMap[name]; !ok {
@@ -91,6 +104,7 @@ func (c *Comparer) compareIngredients(oldIngredientsMap, newIngredientsMap map[s
 
 }
 
+// CompareIngredient compares two ingredients and prints the differences.
 func (c *Comparer) compareIngredient(oldIngredient, newIngredient dbreader.Ingredients, cakeName string) {
 	if oldIngredient.Unit != newIngredient.Unit && newIngredient.Unit != "" {
 		fmt.Printf("CHANGED unit for ingredient \"%s\" for cake \"%s\" - \"%s\" instead of \"%s\"\n", oldIngredient.Name, cakeName, newIngredient.Unit, oldIngredient.Unit)
