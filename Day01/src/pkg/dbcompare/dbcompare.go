@@ -81,7 +81,6 @@ func (c *Comparer) createIngredientsMap(ingredients []dbreader.Ingredients) map[
 	return ingredientMap
 }
 
-
 // CompareIngredients compares two maps of ingredients and prints the differences.
 func (c *Comparer) compareIngredients(oldIngredientsMap, newIngredientsMap map[string]dbreader.Ingredients, cakeName string) {
 	for name := range newIngredientsMap {
