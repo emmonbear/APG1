@@ -12,6 +12,8 @@ import (
 	"github.com/emmonbear/APG1/Day02/src/pkg/finder"
 )
 
+// FindFlags defines the flags for the `myfind` command-line tool.
+// It includes flags for displaying files, directories, symlinks, and filtering by file extension.
 type FindFlags struct {
 	PrintSymlinks    bool
 	PrintDirectories bool
@@ -41,6 +43,8 @@ func main() {
 	}
 }
 
+// parseFlags parses command-line flags for the `myfind` tool.
+// It returns the parsed flags and any error encountered.
 func parseFlags() (FindFlags, error) {
 	var flags FindFlags
 

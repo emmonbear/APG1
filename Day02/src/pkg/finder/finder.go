@@ -6,20 +6,28 @@ import (
 	"path/filepath"
 )
 
+// EntryType defines the type of a file system entry (File, Directory, Symlink).
 type EntryType int
 
 const (
+	// File represents a regular file.
 	File EntryType = iota
+	// Directory represents a directory.
 	Directory
+	// Symlink represents a symbolic link.
 	Symlink
 )
 
+// Entry represents a file system entry with its path, type (file, directory, or symlink),
+// and for symlinks, the target of the symlink.
 type Entry struct {
 	Path string
 	Type EntryType
 	Link string
 }
 
+// Options holds the configuration for the `Find` function, specifying which types
+// of entries should be included in the results and any file extension filter.
 type Options struct {
 	IncludeFiles       bool
 	IncludeDirectories bool
@@ -27,6 +35,9 @@ type Options struct {
 	ExtensionFilter    string
 }
 
+// Find recursively traverses the file system starting at `root` and returns a list of entries
+// based on the specified `Options` (which types of entries to include, and optional extension filter).
+// It skips any errors encountered during traversal (e.g., permission errors) but continues the search.
 func Find(root string, options Options) ([]Entry, error) {
 	var results []Entry
 
@@ -64,6 +75,8 @@ func Find(root string, options Options) ([]Entry, error) {
 	return results, err
 }
 
+// FormatEntry formats an `Entry` as a string based on its type.
+// If the entry is a symlink, it appends the target link or "[broken]" if the link is broken.
 func FormatEntry(entry Entry) string {
 	switch entry.Type {
 	case Directory:
