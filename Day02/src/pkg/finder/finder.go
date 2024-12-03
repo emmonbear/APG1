@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // EntryType defines the type of a file system entry (File, Directory, Symlink).
@@ -75,20 +76,28 @@ func Find(root string, options Options) ([]Entry, error) {
 	return results, err
 }
 
-// FormatEntry formats an `Entry` as a string based on its type.
+// FormatEntry formats an Entry as a string based on its type.
 // If the entry is a symlink, it appends the target link or "[broken]" if the link is broken.
+// It also adds "./" for relative paths.
 func FormatEntry(entry Entry) string {
+
+	formattedPath := entry.Path
+
+	if !filepath.IsAbs(entry.Path) && !strings.HasPrefix(entry.Path, "./") {
+		formattedPath = "./" + entry.Path
+	    }
+    
 	switch entry.Type {
 	case Directory:
-		return entry.Path
+	    return formattedPath
 	case File:
-		return entry.Path
+	    return formattedPath
 	case Symlink:
-		if entry.Link == "[broken]" {
-			return entry.Path + " -> [broken]"
-		}
-		return entry.Path + " -> " + entry.Link
+	    if entry.Link == "[broken]" {
+		return formattedPath + " -> [broken]"
+	    }
+	    return formattedPath + " -> " + entry.Link
 	default:
-		return entry.Path
+	    return formattedPath
 	}
-}
+    }
