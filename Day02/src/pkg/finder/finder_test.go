@@ -39,7 +39,8 @@ func TestFindWithoutFlags(t *testing.T) {
 		t.Fatalf("Lengths do not match: got %d, expected %d", len(result), len(expected))
 	}
 
-	for i := range result {
+	for i, str := range result {
+		_ = FormatEntry(str)
 		if !reflect.DeepEqual(result[i], expected[i]) {
 			t.Errorf("Mismatch at index %d:\nGot:      %+v\nExpected: %+v", i, result[i], expected[i])
 		}
