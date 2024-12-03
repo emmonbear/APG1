@@ -37,7 +37,7 @@ func main() {
 		ExtensionFilter:    flags.Extension,
 	})
 	for _, file := range files {
-		fmt.Println(file)
+		fmt.Println(finder.FormatEntry(file))
 	}
 }
 

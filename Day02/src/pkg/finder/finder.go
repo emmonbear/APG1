@@ -63,3 +63,19 @@ func Find(root string, options Options) ([]Entry, error) {
 
 	return results, err
 }
+
+func FormatEntry(entry Entry) string {
+	switch entry.Type {
+	case Directory:
+		return entry.Path
+	case File:
+		return entry.Path
+	case Symlink:
+		if entry.Link == "[broken]" {
+			return entry.Path + " -> [broken]"
+		}
+		return entry.Path + " -> " + entry.Link
+	default:
+		return entry.Path
+	}
+}
