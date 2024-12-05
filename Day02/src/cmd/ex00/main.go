@@ -7,61 +7,32 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/emmonbear/APG1/Day02/src/pkg/finder"
 )
 
-// FindFlags defines the flags for the `myfind` command-line tool.
-// It includes flags for displaying files, directories, symlinks, and filtering by file extension.
-type FindFlags struct {
-	PrintSymlinks    bool
-	PrintDirectories bool
-	PrintFiles       bool
-	Extension        string
-}
-
 func main() {
-	flags, err := parseFlags()
+	fs := flag.NewFlagSet("main", flag.ContinueOnError)
+	options := finder.NewOptions()
+	err := options.ParseFlags(fs, os.Args[1:])
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
-	if flag.NArg() < 1 {
-		log.Fatal("Usage: ./myfind [options] <path>")
+	if fs.NArg() < 1 {
+		fmt.Fprintln(os.Stderr, "Usage: ./myfind [options] <path>")
+		os.Exit(1)
 	}
 
-	root := flag.Arg(0)
-	files, _ := finder.Find(root, finder.Options{
-		IncludeFiles:       flags.PrintFiles,
-		IncludeDirectories: flags.PrintDirectories,
-		IncludeSymlinks:    flags.PrintSymlinks,
-		ExtensionFilter:    flags.Extension,
-	})
+	root := fs.Arg(0)
+	files, err := finder.Find(root, *options)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 	for _, file := range files {
-		fmt.Println(finder.FormatEntry(file))
+		fmt.Println(&file)
 	}
-}
-
-// parseFlags parses command-line flags for the `myfind` tool.
-// It returns the parsed flags and any error encountered.
-func parseFlags() (FindFlags, error) {
-	var flags FindFlags
-
-	flag.BoolVar(&flags.PrintFiles, "f", false, "Show files")
-	flag.BoolVar(&flags.PrintDirectories, "d", false, "Show directories")
-	flag.BoolVar(&flags.PrintSymlinks, "sl", false, "Show symlinks")
-	flag.StringVar(&flags.Extension, "ext", "", "Show files with specific extension (work only with -f)")
-
-	flag.Parse()
-
-	if !flags.PrintDirectories && !flags.PrintFiles && !flags.PrintSymlinks && flags.Extension == "" {
-		flags = FindFlags{true, true, true, ""}
-	}
-
-	if flags.Extension != "" && !flags.PrintFiles {
-		return flags, fmt.Errorf("the -ext option can only be used with the -f option")
-	}
-
-	return flags, nil
 }

@@ -1,6 +1,8 @@
 package finder
 
 import (
+	"flag"
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -19,16 +21,12 @@ const (
 	Symlink
 )
 
-// Entry represents a file system entry with its path, type (file, directory, or symlink),
-// and for symlinks, the target of the symlink.
 type Entry struct {
 	Path string
 	Type EntryType
 	Link string
 }
 
-// Options holds the configuration for the `Find` function, specifying which types
-// of entries should be included in the results and any file extension filter.
 type Options struct {
 	IncludeFiles       bool
 	IncludeDirectories bool
@@ -36,14 +34,14 @@ type Options struct {
 	ExtensionFilter    string
 }
 
-// Find recursively traverses the file system starting at `root` and returns a list of entries
-// based on the specified `Options` (which types of entries to include, and optional extension filter).
-// It skips any errors encountered during traversal (e.g., permission errors) but continues the search.
 func Find(root string, options Options) ([]Entry, error) {
 	var results []Entry
 
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
+			if os.IsNotExist(err) {
+				return err
+			}
 			return nil
 		}
 
@@ -76,28 +74,48 @@ func Find(root string, options Options) ([]Entry, error) {
 	return results, err
 }
 
-// FormatEntry formats an Entry as a string based on its type.
-// If the entry is a symlink, it appends the target link or "[broken]" if the link is broken.
-// It also adds "./" for relative paths.
-func FormatEntry(entry Entry) string {
+func (o *Options) ParseFlags(fs *flag.FlagSet, args []string) error {
+	fs.BoolVar(&o.IncludeFiles, "f", false, "Show files")
+	fs.BoolVar(&o.IncludeDirectories, "d", false, "Show directories")
+	fs.BoolVar(&o.IncludeSymlinks, "sl", false, "Show symlinks")
+	fs.StringVar(&o.ExtensionFilter, "ext", "", "Show files with specific extension (work only with -f)")
 
-	formattedPath := entry.Path
-
-	if !filepath.IsAbs(entry.Path) && !strings.HasPrefix(entry.Path, "./") {
-		formattedPath = "./" + entry.Path
-	    }
-    
-	switch entry.Type {
-	case Directory:
-	    return formattedPath
-	case File:
-	    return formattedPath
-	case Symlink:
-	    if entry.Link == "[broken]" {
-		return formattedPath + " -> [broken]"
-	    }
-	    return formattedPath + " -> " + entry.Link
-	default:
-	    return formattedPath
+	if err := fs.Parse(args); err != nil {
+		return err
 	}
-    }
+
+	if !o.IncludeDirectories && !o.IncludeFiles && !o.IncludeSymlinks && o.ExtensionFilter == "" {
+		*o = Options{true, true, true, ""}
+	}
+
+	if o.ExtensionFilter != "" && !o.IncludeFiles {
+		return fmt.Errorf("the -ext option can only be used with the -f option")
+	}
+
+	return nil
+}
+
+func NewOptions() *Options {
+	return &Options{false, false, false, ""}
+}
+
+func (e *Entry) String() string {
+	formattedPath := e.Path
+
+	if !filepath.IsAbs(e.Path) && !strings.HasPrefix(e.Path, "./") {
+		formattedPath = "./" + e.Path
+	}
+
+	if e.Type == Directory && !strings.HasSuffix(formattedPath, "/") {
+		formattedPath += "/"
+	}
+
+	if e.Type == Symlink {
+		if e.Link == "[broken]" {
+			return formattedPath + " -> [broken]"
+		}
+		return formattedPath + " -> " + e.Link
+	}
+
+	return formattedPath
+}
