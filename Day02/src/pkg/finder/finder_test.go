@@ -1,6 +1,7 @@
 package finder
 
 import (
+	"flag"
 	"reflect"
 	"testing"
 )
@@ -21,6 +22,7 @@ func TestFindWithoutFlags(t *testing.T) {
 		{Path: "../../cmd/ex00/main_test.go", Type: File, Link: ""},
 		{Path: "../../cmd/ex01", Type: Directory, Link: ""},
 		{Path: "../../cmd/ex01/main.go", Type: File, Link: ""},
+		{Path: "../../cmd/ex01/main_test.go", Type: File, Link: ""},
 		{Path: "../../cmd/ex02", Type: Directory, Link: ""},
 		{Path: "../../cmd/ex02/main.go", Type: File, Link: ""},
 		{Path: "../../cmd/ex03", Type: Directory, Link: ""},
@@ -30,6 +32,9 @@ func TestFindWithoutFlags(t *testing.T) {
 		{Path: "../../pkg/finder", Type: Directory, Link: ""},
 		{Path: "../../pkg/finder/finder.go", Type: File, Link: ""},
 		{Path: "../../pkg/finder/finder_test.go", Type: File, Link: ""},
+		{Path: "../../pkg/wc", Type: Directory, Link: ""},
+		{Path: "../../pkg/wc/wc.go", Type: File, Link: ""},
+		{Path: "../../pkg/wc/wc_test.go", Type: File, Link: ""},
 		{Path: "../../test", Type: Directory, Link: ""},
 		{Path: "../../test/broken_link", Type: Symlink, Link: "[broken]"},
 		{Path: "../../test/correct_link", Type: Symlink, Link: "../cmd/ex00/main.go"},
@@ -39,11 +44,96 @@ func TestFindWithoutFlags(t *testing.T) {
 		t.Fatalf("Lengths do not match: got %d, expected %d", len(result), len(expected))
 	}
 
-	for i, str := range result {
-		_ = FormatEntry(str)
+	for i := range result {
 		if !reflect.DeepEqual(result[i], expected[i]) {
 			t.Errorf("Mismatch at index %d:\nGot:      %+v\nExpected: %+v", i, result[i], expected[i])
 		}
 	}
 
 }
+
+func TestParseFlagsWithExtWithoutFile(t *testing.T) {
+	args := []string{"-ext", "txt", "./path"}
+	fs := flag.NewFlagSet("TestParseFlagsWithExtAndFile", flag.ContinueOnError)
+	options := NewOptions()
+	err := options.ParseFlags(fs, args)
+	if err == nil {
+		t.Fatalf("Error during flag parsing: %v", err)
+	}
+}
+
+
+func TestParseFlags(t *testing.T) {
+	tests := []struct {
+		fileSetName string
+		args        []string
+		expected    *Options
+	}{
+		{
+			fileSetName: "default",
+			args: []string{"./"},
+			expected: &Options{
+				IncludeFiles: true,
+				IncludeDirectories: true,
+				IncludeSymlinks: true,
+			},
+		},
+		{
+			fileSetName: "1",
+			args: []string{"-f", "./path"},
+			expected: &Options{
+				IncludeFiles: true,
+			},
+		},
+		{
+			fileSetName: "2",
+			args: []string{"-d", "./path"},
+			expected: &Options{
+				IncludeDirectories: true,
+			},
+		},
+		{
+			fileSetName: "3",
+			args: []string{"-f", "-ext", "txt", "./path"},
+			expected: &Options{
+				IncludeFiles: true,
+				ExtensionFilter: "txt",
+			},
+		},
+		{
+			fileSetName: "4",
+			args: []string{"-f", "-ext", "go", "-d", "./path"},
+			expected: &Options{
+				IncludeFiles: true,
+				ExtensionFilter: "go",
+				IncludeDirectories: true,
+			},
+		},
+		{
+			fileSetName: "5",
+			args: []string{"-f", "-sl", "-ext", "go", "-d", "./path"},
+			expected: &Options{
+				IncludeFiles: true,
+				ExtensionFilter: "go",
+				IncludeDirectories: true,
+				IncludeSymlinks: true,
+			},
+		},
+	}
+	
+	for _, tt := range tests {
+		t.Run(tt.fileSetName, func(t *testing.T) {
+			fs := flag.NewFlagSet(tt.fileSetName, flag.ContinueOnError)
+			options := NewOptions()
+			err := options.ParseFlags(fs, tt.args)
+			if err != nil {
+				t.Fatalf("Expected non-nil reader, got nil")
+			}
+			if !reflect.DeepEqual(options, tt.expected) {
+				t.Fatalf("Expected %+v, got %+v", tt.expected, options)
+			}
+		})
+	}
+
+}
+
