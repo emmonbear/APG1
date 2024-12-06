@@ -1,8 +1,10 @@
 package wc
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 )
 
@@ -44,4 +46,24 @@ func (wc *WCFlags) ParseFlags(fs *flag.FlagSet, args []string) error {
 	}
 
 	return nil
+}
+
+func WC(filename string, options *WCFlags) (int, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return 0, fmt.Errorf("could not open file %s: %v", filename, err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var count int
+	switch {
+	case options.Lines:
+		for scanner.Scan() {
+			count++
+		}
+	}
+	fmt.Printf("%d\t%s\n", count, filename)
+	return count, nil
 }
