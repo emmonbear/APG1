@@ -7,9 +7,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
-
 	"github.com/emmonbear/APG1/Day02/src/pkg/wc"
+	"os"
+	"sync"
 )
 
 type Person struct {
@@ -19,12 +19,26 @@ type Person struct {
 
 func main() {
 	fs := flag.NewFlagSet("main", flag.ContinueOnError)
+
 	options := wc.NewWCFlags()
 	err := options.ParseFlags(fs, os.Args[1:])
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return
+	}
+	fmt.Printf("%+v", options)
+	var wg sync.WaitGroup
+	for _, filename := range fs.Args() {
+		wg.Add(1)
+		go func(file string) {
+			defer wg.Done()
+			_, err := wc.WC(file, options)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				return
+			}
+		}(filename)
 	}
 
-	fmt.Println(options)
+	wg.Wait()
 }
