@@ -3,6 +3,7 @@ package wc
 import (
 	"flag"
 	"fmt"
+	"path/filepath"
 )
 
 type WCFlags struct {
@@ -22,6 +23,16 @@ func (wc *WCFlags) ParseFlags(fs *flag.FlagSet, args []string) error {
 
 	if err := fs.Parse(args); err != nil {
 		return err
+	}
+
+	if fs.NArg() < 1 {
+		return fmt.Errorf("you need to specify a txt file")
+	}
+
+	for _, filename := range fs.Args() {
+		if filepath.Ext(filename) != ".txt" {
+			return fmt.Errorf("the file %s must have a .txt extension", filename)
+		}
 	}
 
 	if (wc.Lines && wc.Chars) || (wc.Lines && wc.Words) || (wc.Words && wc.Lines) {
