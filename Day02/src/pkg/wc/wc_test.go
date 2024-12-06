@@ -12,6 +12,13 @@ type ParserTest struct {
 	expected *WCFlags
 }
 
+type WCTest struct {
+	name     string
+	filename string
+	options  *WCFlags
+	expected int
+}
+
 var parserTests = []ParserTest{
 	{name: "Without flags", options: []string{"test.txt"}, expected: &WCFlags{Words: true}},
 	{name: "With flag -l", options: []string{"-l", "test.txt"}, expected: &WCFlags{Lines: true}},
@@ -25,6 +32,12 @@ var parserEdgeTests = []ParserTest{
 	{name: "With incorrect flag", options: []string{"-ls", "test.txt"}},
 	{name: "Without txt file", options: []string{"-l"}},
 	{name: "Many files, but second not txt", options: []string{"test.txt", "test.tx"}},
+	{name: "flag after file", options: []string{"test.tx", "-l"}},
+}
+
+var wcTests = []WCTest{
+	{name: "count lines in test_1.txt", filename: "../../test/files/test_1.txt", options: &WCFlags{Lines: true}, expected: 40},
+	{name: "count lines in test_1.txt", filename: "../../test/files/test_2.txt", options: &WCFlags{Lines: true}, expected: 26},
 }
 
 func TestParserWCFlags(t *testing.T) {
@@ -39,6 +52,14 @@ func TestParserWCFlagsEdge(t *testing.T) {
 	for _, tt := range parserEdgeTests {
 		t.Run(tt.name, func(t *testing.T) {
 			testParcerWCFlagEdges(t, tt.name, tt.options)
+		})
+	}
+}
+
+func TestWC(t *testing.T) {
+	for _, tt := range wcTests {
+		t.Run(tt.name, func(t *testing.T) {
+			testWC(t, tt.filename, tt.options, tt.expected)
 		})
 	}
 }
@@ -64,4 +85,15 @@ func testParcerWCFlagEdges(t *testing.T, name string, options []string) {
 		t.Fatal(err)
 	}
 
+}
+
+func testWC(t *testing.T, filename string, options *WCFlags, expected int) {
+	result, err := WC(filename, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if result != expected {
+		t.Fatalf("expected %v, got %v", expected, result)
+	}
 }
