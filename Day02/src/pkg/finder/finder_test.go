@@ -62,7 +62,6 @@ func TestParseFlagsWithExtWithoutFile(t *testing.T) {
 	}
 }
 
-
 func TestParseFlags(t *testing.T) {
 	tests := []struct {
 		fileSetName string
@@ -71,56 +70,56 @@ func TestParseFlags(t *testing.T) {
 	}{
 		{
 			fileSetName: "default",
-			args: []string{"./"},
+			args:        []string{"./"},
 			expected: &Options{
-				IncludeFiles: true,
+				IncludeFiles:       true,
 				IncludeDirectories: true,
-				IncludeSymlinks: true,
+				IncludeSymlinks:    true,
 			},
 		},
 		{
 			fileSetName: "1",
-			args: []string{"-f", "./path"},
+			args:        []string{"-f", "./path"},
 			expected: &Options{
 				IncludeFiles: true,
 			},
 		},
 		{
 			fileSetName: "2",
-			args: []string{"-d", "./path"},
+			args:        []string{"-d", "./path"},
 			expected: &Options{
 				IncludeDirectories: true,
 			},
 		},
 		{
 			fileSetName: "3",
-			args: []string{"-f", "-ext", "txt", "./path"},
+			args:        []string{"-f", "-ext", "txt", "./path"},
 			expected: &Options{
-				IncludeFiles: true,
+				IncludeFiles:    true,
 				ExtensionFilter: "txt",
 			},
 		},
 		{
 			fileSetName: "4",
-			args: []string{"-f", "-ext", "go", "-d", "./path"},
+			args:        []string{"-f", "-ext", "go", "-d", "./path"},
 			expected: &Options{
-				IncludeFiles: true,
-				ExtensionFilter: "go",
+				IncludeFiles:       true,
+				ExtensionFilter:    "go",
 				IncludeDirectories: true,
 			},
 		},
 		{
 			fileSetName: "5",
-			args: []string{"-f", "-sl", "-ext", "go", "-d", "./path"},
+			args:        []string{"-f", "-sl", "-ext", "go", "-d", "./path"},
 			expected: &Options{
-				IncludeFiles: true,
-				ExtensionFilter: "go",
+				IncludeFiles:       true,
+				ExtensionFilter:    "go",
 				IncludeDirectories: true,
-				IncludeSymlinks: true,
+				IncludeSymlinks:    true,
 			},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.fileSetName, func(t *testing.T) {
 			fs := flag.NewFlagSet(tt.fileSetName, flag.ContinueOnError)
@@ -136,4 +135,3 @@ func TestParseFlags(t *testing.T) {
 	}
 
 }
-
