@@ -37,7 +37,23 @@ var parserEdgeTests = []ParserTest{
 
 var wcTests = []WCTest{
 	{name: "count lines in test_1.txt", filename: "../../test/files/test_1.txt", options: &WCFlags{Lines: true}, expected: 40},
-	{name: "count lines in test_1.txt", filename: "../../test/files/test_2.txt", options: &WCFlags{Lines: true}, expected: 26},
+	{name: "count words in test_1.txt", filename: "../../test/files/test_1.txt", options: &WCFlags{Words: true}, expected: 404},
+	{name: "count chars in test_1.txt", filename: "../../test/files/test_1.txt", options: &WCFlags{Chars: true}, expected: 2876},
+	{name: "count lines in test_2.txt", filename: "../../test/files/test_2.txt", options: &WCFlags{Lines: true}, expected: 26},
+	{name: "count words in test_2.txt", filename: "../../test/files/test_2.txt", options: &WCFlags{Words: true}, expected: 270},
+	{name: "count chars in test_2.txt", filename: "../../test/files/test_2.txt", options: &WCFlags{Chars: true}, expected: 1793},
+	{name: "count lines in test_3.txt", filename: "../../test/files/test_3.txt", options: &WCFlags{Lines: true}, expected: 9},
+	{name: "count words in test_3.txt", filename: "../../test/files/test_3.txt", options: &WCFlags{Words: true}, expected: 143},
+	{name: "count chars in test_3.txt", filename: "../../test/files/test_3.txt", options: &WCFlags{Chars: true}, expected: 718},
+	{name: "count lines in test_4.txt", filename: "../../test/files/test_4.txt", options: &WCFlags{Lines: true}, expected: 19},
+	{name: "count words in test_4.txt", filename: "../../test/files/test_4.txt", options: &WCFlags{Words: true}, expected: 171},
+	{name: "count chars in test_4.txt", filename: "../../test/files/test_4.txt", options: &WCFlags{Chars: true}, expected: 1196},
+	{name: "count lines in test_5.txt", filename: "../../test/files/test_5.txt", options: &WCFlags{Lines: true}, expected: 27},
+	{name: "count words in test_5.txt", filename: "../../test/files/test_5.txt", options: &WCFlags{Words: true}, expected: 1143},
+	{name: "count chars in test_5.txt", filename: "../../test/files/test_5.txt", options: &WCFlags{Chars: true}, expected: 6557},
+	{name: "count lines in test_6.txt", filename: "../../test/files/test_6.txt", options: &WCFlags{Lines: true}, expected: 25},
+	{name: "count words in test_6.txt", filename: "../../test/files/test_6.txt", options: &WCFlags{Words: true}, expected: 0},
+	{name: "count chars in test_6.txt", filename: "../../test/files/test_6.txt", options: &WCFlags{Chars: true}, expected: 24},
 }
 
 func TestParserWCFlags(t *testing.T) {
