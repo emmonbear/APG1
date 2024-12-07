@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
+	"unicode/utf8"
 )
 
 type WCFlags struct {
@@ -57,13 +59,33 @@ func WC(filename string, options *WCFlags) (int, error) {
 
 	scanner := bufio.NewScanner(file)
 
-	var count int
+	var lines int
+	var chars int
+	var words int
+	wordRegexp := regexp.MustCompile(`\S+`)
+
+	for scanner.Scan() {
+		lines++
+		line := scanner.Text()
+		chars += utf8.RuneCountInString(line)
+		words += len(wordRegexp.FindAllString(line, -1))
+	}
+
+	if err := scanner.Err(); err != nil {
+		return 0, fmt.Errorf("error reading file %s: %v", filename, err)
+	}
+
 	switch {
 	case options.Lines:
-		for scanner.Scan() {
-			count++
+		return lines, nil
+	case options.Chars:
+		if lines == 0 {
+			return chars, nil
 		}
+		return chars + lines - 1, nil
+	case options.Words:
+		return words, nil
+	default:
+		return 0, nil
 	}
-	fmt.Printf("%d\t%s\n", count, filename)
-	return count, nil
 }
