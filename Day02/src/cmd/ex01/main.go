@@ -26,17 +26,17 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
-	fmt.Printf("%+v", options)
 	var wg sync.WaitGroup
 	for _, filename := range fs.Args() {
 		wg.Add(1)
 		go func(file string) {
 			defer wg.Done()
-			_, err := wc.WC(file, options)
+			count, err := wc.WC(file, options)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 				return
 			}
+			fmt.Printf("%d\t%s\n", count, filename)
 		}(filename)
 	}
 
