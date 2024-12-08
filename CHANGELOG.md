@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Update ex00
 - Add print ./ for relative path
 - Add printf info
+- *(wc)* Remove the check for txt file extension
 
 ### 📚 Documentation
 
@@ -58,6 +59,7 @@ All notable changes to this project will be documented in this file.
 - Add datasets
 - Add tests for the WC function of the wc package
 - Add parcer of command line tests
+- *(xargs)* Add tests for the execute method
 
 ### ⚙️ Miscellaneous Tasks
 
