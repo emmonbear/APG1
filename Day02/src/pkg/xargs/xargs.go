@@ -4,15 +4,22 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os"
+	"os/exec"
 	"strings"
 )
 
 type XArgs struct {
+	Command   string
 	InputArgs []string
+	BaseArgs  []string
 }
 
-func New() *XArgs {
-	return &XArgs{}
+func New(command string, baseArgs []string) *XArgs {
+	return &XArgs{
+		Command:  command,
+		BaseArgs: baseArgs,
+	}
 }
 
 func (x *XArgs) ParseCommandLine(in io.Reader) error {
@@ -27,6 +34,19 @@ func (x *XArgs) ParseCommandLine(in io.Reader) error {
 
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("error reading input %v", err)
+	}
+
+	return nil
+}
+
+func (x *XArgs) Execute(out io.Writer) error {
+	allArgs := append(x.BaseArgs, x.InputArgs...)
+	cmd := exec.Command(x.Command, allArgs...)
+	cmd.Stdout = out
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("command execution error '%s': %v", x.Command, err)
 	}
 
 	return nil
