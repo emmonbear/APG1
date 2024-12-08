@@ -1,6 +1,7 @@
 package xargs
 
 import (
+	"bytes"
 	"reflect"
 	"strings"
 	"testing"
@@ -10,6 +11,14 @@ type ParcerCommandLineTest struct {
 	name     string
 	input    string
 	expected []string
+}
+
+type ExecuteTest struct {
+	name      string
+	command   string
+	baseArgs  []string
+	inputArgs string
+	expected  string
 }
 
 var parcerCommandLineTests = []ParcerCommandLineTest{
@@ -39,6 +48,69 @@ var parcerCommandLineTests = []ParcerCommandLineTest{
 	{name: "echo -e \"line1\nline2\nline3 line4\"", input: "line1\nline2\nline3 line4", expected: []string{"line1", "line2", "line3", "line4"}},
 }
 
+var executeTests = []ExecuteTest{
+	{
+		name:     "find -type f -name \"*.txt\" ./ | ./myXargs wc -m",
+		command:  "wc",
+		baseArgs: []string{"-m"},
+		inputArgs: strings.Join([]string{
+			"../../test/files/test_3.txt",
+			"../../test/files/test_4.txt",
+			"../../test/files/test_6.txt",
+			"../../test/files/test_5.txt",
+			"../../test/files/test_2.txt",
+			"../../test/files/test_1.txt",
+		}, " "),
+		expected: "  718 ../../test/files/test_3.txt\n" +
+			" 1196 ../../test/files/test_4.txt\n" +
+			"   25 ../../test/files/test_6.txt\n" +
+			" 6557 ../../test/files/test_5.txt\n" +
+			" 1793 ../../test/files/test_2.txt\n" +
+			" 2876 ../../test/files/test_1.txt\n" +
+			"13165 total\n",
+	},
+	{
+		name:     "find -type f -name \"*.txt\" ./ | ./myXargs wc -l",
+		command:  "wc",
+		baseArgs: []string{"-l"},
+		inputArgs: strings.Join([]string{
+			"../../test/files/test_3.txt",
+			"../../test/files/test_4.txt",
+			"../../test/files/test_6.txt",
+			"../../test/files/test_5.txt",
+			"../../test/files/test_2.txt",
+			"../../test/files/test_1.txt",
+		}, " "),
+		expected: "    8 ../../test/files/test_3.txt\n" +
+			"   18 ../../test/files/test_4.txt\n" +
+			"   25 ../../test/files/test_6.txt\n" +
+			"   26 ../../test/files/test_5.txt\n" +
+			"   25 ../../test/files/test_2.txt\n" +
+			"   39 ../../test/files/test_1.txt\n" +
+			"  141 total\n",
+	},
+	{
+		name:     "find -type f -name \"*.txt\" ./ | ./myXargs wc -w",
+		command:  "wc",
+		baseArgs: []string{"-w"},
+		inputArgs: strings.Join([]string{
+			"../../test/files/test_3.txt",
+			"../../test/files/test_4.txt",
+			"../../test/files/test_6.txt",
+			"../../test/files/test_5.txt",
+			"../../test/files/test_2.txt",
+			"../../test/files/test_1.txt",
+		}, " "),
+		expected: "  143 ../../test/files/test_3.txt\n" +
+			"  171 ../../test/files/test_4.txt\n" +
+			"    0 ../../test/files/test_6.txt\n" +
+			" 1143 ../../test/files/test_5.txt\n" +
+			"  270 ../../test/files/test_2.txt\n" +
+			"  404 ../../test/files/test_1.txt\n" +
+			" 2131 total\n",
+	},
+}
+
 func TestParcerCommandLine(t *testing.T) {
 	for _, tt := range parcerCommandLineTests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -47,8 +119,16 @@ func TestParcerCommandLine(t *testing.T) {
 	}
 }
 
+func TestExecute(t *testing.T) {
+	for _, tt := range executeTests {
+		t.Run(tt.name, func(t *testing.T) {
+			testExecute(t, tt.command, tt.baseArgs, tt.inputArgs, tt.expected)
+		})
+	}
+}
+
 func testParcerCommandLine(t *testing.T, in string, expected []string) {
-	result := New()
+	result := New("", nil)
 	err := result.ParseCommandLine(strings.NewReader(in))
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
@@ -56,5 +136,22 @@ func testParcerCommandLine(t *testing.T, in string, expected []string) {
 
 	if !reflect.DeepEqual(result.InputArgs, expected) {
 		t.Fatalf("expected %v, got %v", expected, result.InputArgs)
+	}
+}
+
+func testExecute(t *testing.T, command string, baseArgs []string, inputArgs string, expected string) {
+	args := New(command, baseArgs)
+
+	if err := args.ParseCommandLine(strings.NewReader(inputArgs)); err != nil {
+		t.Fatalf("Expected not error, got %v", err)
+	}
+
+	var result bytes.Buffer
+	args.Execute(&result)
+
+	output := result.String()
+
+	if output != expected {
+		t.Fatalf("Expected \n%v\n, got \n%v\n", expected, output)
 	}
 }
