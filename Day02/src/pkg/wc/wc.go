@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"regexp"
 	"unicode/utf8"
 )
@@ -31,12 +30,6 @@ func (wc *WCFlags) ParseFlags(fs *flag.FlagSet, args []string) error {
 
 	if fs.NArg() < 1 {
 		return fmt.Errorf("you need to specify a txt file")
-	}
-
-	for _, filename := range fs.Args() {
-		if filepath.Ext(filename) != ".txt" {
-			return fmt.Errorf("the file %s must have a .txt extension", filename)
-		}
 	}
 
 	if (wc.Lines && wc.Chars) || (wc.Lines && wc.Words) || (wc.Words && wc.Lines) {
