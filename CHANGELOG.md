@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - *(ex02)* Update main function
 - *(rotate)* Add a flag handling function
 - *(rotate)* Add implementation of file archiving
+- *(rotate)* Add main package
 
 ### 🐛 Bug Fixes
 
@@ -46,9 +47,18 @@ All notable changes to this project will be documented in this file.
 - *(rotate)* Change ErrorHandling from ExitOnError to ContinueOnError
 - *(rotate)* Change the default directory to the current directory
 
+### 🚜 Refactor
+
+- Restructure the project
+
 ### 📚 Documentation
 
 - Add documentation
+- Add documentation
+
+### 🎨 Styling
+
+- *(rotate)* Style fix
 
 ### 🧪 Testing
 
@@ -67,6 +77,9 @@ All notable changes to this project will be documented in this file.
 - *(xargs)* Add tests for the execute method
 - *(rotate)* Add tests for ParseFlags
 - *(rotate)* Fix test cases with missing -a flag
+- *(rotate)* Add tests for rotate
+- *(finder)* Fix tests
+- *(wc)* Fix tests
 
 ### ⚙️ Miscellaneous Tasks
 
