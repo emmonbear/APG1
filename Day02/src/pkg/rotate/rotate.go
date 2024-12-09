@@ -11,7 +11,7 @@ type Config struct {
 }
 
 func ParseFlags(args []string) (*Config, error) {
-	fs := flag.NewFlagSet("rotate", flag.ExitOnError)
+	fs := flag.NewFlagSet("rotate", flag.ContinueOnError)
 
 	var archiveDir string
 	fs.StringVar(&archiveDir, "a", "", "Directory to store archives")
