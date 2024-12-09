@@ -1,3 +1,6 @@
+// Copyright 2024 Moskalev Ilya. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
 package rotate
 
 import (
@@ -10,11 +13,14 @@ import (
 	"path/filepath"
 )
 
+// Config contains configuration options for rotating files.
 type Config struct {
-	FileNames  []string
-	ArchiveDir string
+	FileNames  []string // List of log files to rotate
+	ArchiveDir string   // Directory where archives will be stored
 }
 
+// ParseFlags parses command-line flags and arguments and returns a Config object.
+// It expects the file names as arguments and an optional -a flag to specify the archive directory.
 func ParseFlags(args []string) (*Config, error) {
 	fs := flag.NewFlagSet("rotate", flag.ContinueOnError)
 
@@ -36,6 +42,8 @@ func ParseFlags(args []string) (*Config, error) {
 	}, nil
 }
 
+// Rotate processes each file in the FileNames slice and attempts to archive it.
+// The archiving is performed concurrently for each file using goroutines.
 func Rotate(config *Config) error {
 	results := make(chan error)
 	for _, file := range config.FileNames {
@@ -53,6 +61,8 @@ func Rotate(config *Config) error {
 	return nil
 }
 
+// rotateFile rotates the specified file by creating a tar.gz archive with the current timestamp.
+// It returns an error if the file is a directory or if any error occurs during archiving.
 func rotateFile(file string, archiveDir string) error {
 	info, err := os.Stat(file)
 	if err != nil {
@@ -74,6 +84,8 @@ func rotateFile(file string, archiveDir string) error {
 	return nil
 }
 
+// createTarGz creates a tar.gz archive of the specified file.
+// It writes the file to the archive along with a tar header that contains file metadata.
 func createTarGz(file string, archiveName string, info os.FileInfo) error {
 	archiveFile, err := os.Create(archiveName)
 	if err != nil {

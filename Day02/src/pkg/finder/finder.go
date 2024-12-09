@@ -1,3 +1,6 @@
+// Copyright 2024 Moskalev Ilya. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
 package finder
 
 import (
@@ -10,6 +13,7 @@ import (
 )
 
 // EntryType defines the type of a file system entry (File, Directory, Symlink).
+// It represents the possible types of file system entries found during the search.
 type EntryType int
 
 const (
@@ -21,19 +25,23 @@ const (
 	Symlink
 )
 
+// Entry represents a file system entry (file, directory, or symlink).
+// It contains the path, type, and for symlinks, the target link.
 type Entry struct {
-	Path string
-	Type EntryType
-	Link string
+	Path string    // Path of the entry
+	Type EntryType // Type of the entry (File, Directory, or Symlink)
+	Link string    // Target link for symlinks, or empty if not a symlink
 }
 
 type Options struct {
-	IncludeFiles       bool
-	IncludeDirectories bool
-	IncludeSymlinks    bool
-	ExtensionFilter    string
+	IncludeFiles       bool   // If true, include regular files in the search results
+	IncludeDirectories bool   // If true, include directories in the search results
+	IncludeSymlinks    bool   // If true, include symbolic links in the search results
+	ExtensionFilter    string // Filter files by extension (works only with -f option)
 }
 
+// Find searches the file system starting from the root directory, and returns the matching entries
+// based on the specified options. It will traverse all subdirectories recursively.
 func Find(root string, options Options) ([]Entry, error) {
 	var results []Entry
 
@@ -74,6 +82,8 @@ func Find(root string, options Options) ([]Entry, error) {
 	return results, err
 }
 
+// ParseFlags parses command-line flags to configure the search options.
+// It ensures that flags are set correctly and returns an error if the flags are invalid.
 func (o *Options) ParseFlags(fs *flag.FlagSet, args []string) error {
 	fs.BoolVar(&o.IncludeFiles, "f", false, "Show files")
 	fs.BoolVar(&o.IncludeDirectories, "d", false, "Show directories")
@@ -95,10 +105,13 @@ func (o *Options) ParseFlags(fs *flag.FlagSet, args []string) error {
 	return nil
 }
 
+// NewOptions creates and returns a new instance of Options with default values.
 func NewOptions() *Options {
 	return &Options{false, false, false, ""}
 }
 
+// String returns a human-readable string representation of the Entry, formatted based on its type.
+// For symlinks, the target link is included, and if broken, it indicates "[broken]".
 func (e *Entry) String() string {
 	formattedPath := e.Path
 

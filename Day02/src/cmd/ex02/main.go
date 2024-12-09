@@ -2,6 +2,15 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
+// Package main is the entry point for the myXargs utility.
+// It reads input arguments, processes them, and executes the specified commands.
+// It handles errors gracefully and provides appropriate feedback for each step.
+//
+// Usage:
+//
+//	./myXargs [options] [arguments...]
+//
+// The functionality for parsing and executing commands is provided by the xargs package.
 package main
 
 import (
@@ -11,6 +20,15 @@ import (
 	"github.com/emmonbear/APG1/Day02/src/pkg/xargs"
 )
 
+// Package main is the entry point for the myXargs utility.
+// It reads input arguments, processes them, and executes the specified commands.
+// It handles errors gracefully and provides appropriate feedback for each step.
+//
+// Usage:
+//
+//	./myXargs [options] [arguments...]
+//
+// The functionality for parsing and executing commands is provided by the xargs package.
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: ./myXargs [options] [arguments...]")

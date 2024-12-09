@@ -1,3 +1,6 @@
+// Copyright 2024 Moskalev Ilya. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
 package wc
 
 import (
@@ -9,16 +12,21 @@ import (
 	"unicode/utf8"
 )
 
+// WCFlags represents the flags used to specify which type of counts to perform.
 type WCFlags struct {
-	Lines bool
-	Chars bool
-	Words bool
+	Lines bool // Flag to count the number of lines
+	Chars bool // Flag to count the number of characters
+	Words bool // Flag to count the number of words
 }
 
+// NewWCFlags initializes a new WCFlags structure with default values (no flags enabled).
 func NewWCFlags() *WCFlags {
 	return &WCFlags{false, false, false}
 }
 
+// ParseFlags parses the command-line flags and arguments.
+// It expects flags for line count (-l), character count (-m), and word count (-w),
+// and checks for conflicts between the flags.
 func (wc *WCFlags) ParseFlags(fs *flag.FlagSet, args []string) error {
 	fs.BoolVar(&wc.Lines, "l", false, "Count the numbers of lines")
 	fs.BoolVar(&wc.Chars, "m", false, "Count the numbers of characters")
@@ -43,6 +51,8 @@ func (wc *WCFlags) ParseFlags(fs *flag.FlagSet, args []string) error {
 	return nil
 }
 
+// WC reads the contents of a file and performs the requested counting based on the provided flags.
+// It returns the count of lines, words, or characters depending on the flag set.
 func WC(filename string, options *WCFlags) (int, error) {
 	file, err := os.Open(filename)
 	if err != nil {
