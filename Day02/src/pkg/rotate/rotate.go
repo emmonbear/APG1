@@ -77,7 +77,7 @@ func rotateFile(file string, archiveDir string) error {
 func createTarGz(file string, archiveName string, info os.FileInfo) error {
 	archiveFile, err := os.Create(archiveName)
 	if err != nil {
-		return fmt.Errorf("failed to create archive file %s: %v",file, err)
+		return fmt.Errorf("failed to create archive file %s: %v", file, err)
 	}
 	defer archiveFile.Close()
 
@@ -105,7 +105,7 @@ func createTarGz(file string, archiveName string, info os.FileInfo) error {
 	}
 
 	if _, err := io.Copy(tarWriter, sourceFile); err != nil {
-		return fmt.Errorf("failed to write file content to archive file %s: %v",file, err)
+		return fmt.Errorf("failed to write file content to archive file %s: %v", file, err)
 	}
 
 	return nil
