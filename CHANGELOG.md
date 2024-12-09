@@ -33,6 +33,8 @@ All notable changes to this project will be documented in this file.
 - Add command line parsing in xargs package
 - Add generate_changelog.yaml
 - *(xargs)* Add execute method
+- *(ex02)* Update main function
+- *(rotate)* Add a flag handling function
 
 ### 🐛 Bug Fixes
 
@@ -40,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Add print ./ for relative path
 - Add printf info
 - *(wc)* Remove the check for txt file extension
+- *(rotate)* Change ErrorHandling from ExitOnError to ContinueOnError
 
 ### 📚 Documentation
 
@@ -60,6 +63,7 @@ All notable changes to this project will be documented in this file.
 - Add tests for the WC function of the wc package
 - Add parcer of command line tests
 - *(xargs)* Add tests for the execute method
+- *(rotate)* Add tests for ParseFlags
 
 ### ⚙️ Miscellaneous Tasks
 
