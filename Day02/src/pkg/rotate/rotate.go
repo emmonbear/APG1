@@ -14,7 +14,7 @@ func ParseFlags(args []string) (*Config, error) {
 	fs := flag.NewFlagSet("rotate", flag.ContinueOnError)
 
 	var archiveDir string
-	fs.StringVar(&archiveDir, "a", "", "Directory to store archives")
+	fs.StringVar(&archiveDir, "a", ".", "Directory to store archives")
 	if err := fs.Parse(args); err != nil {
 		return nil, err
 	}
