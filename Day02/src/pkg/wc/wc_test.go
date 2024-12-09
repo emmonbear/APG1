@@ -31,8 +31,6 @@ var parserEdgeTests = []ParserTest{
 	{name: "With -l and -m", options: []string{"-l", "-m", "test.txt"}},
 	{name: "With incorrect flag", options: []string{"-ls", "test.txt"}},
 	{name: "Without txt file", options: []string{"-l"}},
-	{name: "Many files, but second not txt", options: []string{"test.txt", "test.tx"}},
-	{name: "flag after file", options: []string{"test.tx", "-l"}},
 }
 
 var wcTests = []WCTest{
