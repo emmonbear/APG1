@@ -29,14 +29,14 @@ var parserTests = []ParserTest{
 		args: []string{"log.log"},
 		expected: &Config{
 			FileNames:  []string{"log.log"},
-			ArchiveDir: ""},
+			ArchiveDir: "."},
 	},
 	{
 		name: "./myRotate path log1.log log2.log",
 		args: []string{"path", "log1.log", "log2.log"},
 		expected: &Config{
 			FileNames:  []string{"path", "log1.log", "log2.log"},
-			ArchiveDir: ""},
+			ArchiveDir: "."},
 	},
 }
 
