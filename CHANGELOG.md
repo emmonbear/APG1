@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - *(xargs)* Add execute method
 - *(ex02)* Update main function
 - *(rotate)* Add a flag handling function
+- *(rotate)* Add implementation of file archiving
 
 ### 🐛 Bug Fixes
 
@@ -43,6 +44,7 @@ All notable changes to this project will be documented in this file.
 - Add printf info
 - *(wc)* Remove the check for txt file extension
 - *(rotate)* Change ErrorHandling from ExitOnError to ContinueOnError
+- *(rotate)* Change the default directory to the current directory
 
 ### 📚 Documentation
 
@@ -64,6 +66,7 @@ All notable changes to this project will be documented in this file.
 - Add parcer of command line tests
 - *(xargs)* Add tests for the execute method
 - *(rotate)* Add tests for ParseFlags
+- *(rotate)* Fix test cases with missing -a flag
 
 ### ⚙️ Miscellaneous Tasks
 
