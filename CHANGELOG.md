@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### ⚙️ Miscellaneous Tasks
+
+- Initial commit
+
+## [3.0] - 2024-12-09
+
 ### 🚀 Features
 
 - Add input utils package
