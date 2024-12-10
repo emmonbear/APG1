@@ -4,9 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🚀 Features
+
+- *(elasticsearch)* Add client creation with retry logic
+
+### 📚 Documentation
+
+- *(elasticsearch)* Add documentation for NewClient function
+
+### 🧪 Testing
+
+- *(elasticsearch)* Add unit tests for client creation
+
 ### ⚙️ Miscellaneous Tasks
 
 - Initial commit
+- Go mod init
 
 ## [3.0] - 2024-12-09
 
