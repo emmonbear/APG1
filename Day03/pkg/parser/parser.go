@@ -1,4 +1,9 @@
-package parcer
+// Copyright 2024 Moskalev Ilya. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
+
+// Package parcer provides functionality to parse CSV files into a structured format.
+package parser
 
 import (
 	"encoding/csv"
@@ -6,6 +11,7 @@ import (
 	"strconv"
 )
 
+// Record represents a single entry in the CSV file.
 type Record struct {
 	Name      string  `csv:"Name"`
 	Address   string  `csv:"Address"`
@@ -14,7 +20,10 @@ type Record struct {
 	Latitude  float64 `csv:"Latitude"`
 }
 
-func Parcer(filePath string) ([]Record, error) {
+// Parcer reads a CSV file from the given file path and returns a slice of Record structs.
+// The CSV file is expected to have a header row and use tab-separated values.
+// It returns an error if the file cannot be opened or read.
+func Parser(filePath string) ([]Record, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err

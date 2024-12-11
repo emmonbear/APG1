@@ -1,4 +1,4 @@
-package parcer
+package parser
 
 import (
 	"math"
@@ -24995,7 +24995,7 @@ func TestParser(t *testing.T) {
 	}
 
 	filePath := "../../test/data.csv"
-	records, _ := Parcer(filePath)
+	records, _ := Parser(filePath)
 
 	if len(records) != len(expected) {
 		t.Errorf("Expected %d records, got %d", len(expected), len(records))
