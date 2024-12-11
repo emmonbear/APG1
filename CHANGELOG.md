@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### 🚀 Features
 
 - *(elasticsearch)* Add client creation with retry logic
+- *(parcer)* Add csv file parser
+
+### 🚜 Refactor
+
+- *(parser)* Rename packages
 
 ### 📚 Documentation
 
@@ -15,6 +20,8 @@ All notable changes to this project will be documented in this file.
 ### 🧪 Testing
 
 - *(elasticsearch)* Add unit tests for client creation
+- *(parcer)* Add tests
+- *(parcer)* Add database for tests
 
 ### ⚙️ Miscellaneous Tasks
 
